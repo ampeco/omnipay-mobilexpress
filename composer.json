@@ -1,0 +1,24 @@
+{
+    "name": "ampeco/omnipay-mobilexpress",
+    "description": "Omnipay plugin for https://developer.mobilexpress.com.tr/docs/introduction",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Ampeco\\OmnipayMobilExpress\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Alexander Alexiev",
+            "email": "alexander.alexiev@ampeco.com"
+        },
+        {
+            "name": "Tihomir Tonov",
+            "email": "tihomir.tonov@ampeco.com"
+        }
+    ],
+    "require": {
+        "omnipay/common": "^3"
+    }
+}
