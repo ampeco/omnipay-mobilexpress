@@ -1,69 +1,32 @@
 <?php
+
 namespace Ampeco\OmnipayMobilExpress\Message;
+
+use Ampeco\OmnipayMobilExpress\CommonParameters;
+
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
+    use CommonParameters;
 
     const ENDPOINT_PRODUCTION = 'https://api.mobilexpress.com.tr/';
     const ENDPOINT_TESTING = 'https://testapi.mobilexpress.com.tr/';
 
-    /**
-     * Get the gateway API Key.
-     *
-     * @return string
-     */
-    public function getApiKey()
-    {
-        return $this->getParameter('apiKey');
-    }
+    abstract public function getEndpoint();
 
-    /**
-     * Set the gateway API Key.
-     *
-     * @return AbstractRequest provides a fluent interface.
-     */
-    public function setApiKey($value)
+    public function getBaseUrl()
     {
-        return $this->setParameter('apiKey', $value);
-    }
-
-    /**
-     * Get the gateway merchant code.
-     *
-     * @return string
-     */
-    public function getMerchantCode()
-    {
-        return $this->getParameter('merchantCode');
-    }
-
-    /**
-     * Set the gateway metchant code
-     *
-     * @return AbstractRequest provides a fluent interface.
-     */
-    public function setMerchantCode($value)
-    {
-        return $this->setParameter('merchantCode', $value);
-    }
-
-    public function getBaseUrl(){
         return $this->getTestMode() ? self::ENDPOINT_TESTING : self::ENDPOINT_PRODUCTION;
     }
 
-    /**
-     * @return array
-     */
-    public function getHeaders()
+    public function getHeaders(): array
     {
-        $headers = array();
-
+        $headers = [];
 
         return $headers;
     }
 
-    abstract public function getEndpoint();
-
-    public function getHttpMethod() {
+    public function getHttpMethod()
+    {
         return 'POST';
     }
 
@@ -72,28 +35,58 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
      */
     public function sendData($data)
     {
-        $headers = array_merge(
-            $this->getHeaders(),
-            [
-                'Authorization' => 'MxS2S ' . base64_encode($this->getApiKey()),
-                'MerchantCode' => $this->getMerchantCode(),
-                'Content-Type' => 'application/json',
-            ],
-        );
+        $headers = array_merge($this->getHeaders(), [
+            'Authorization' => $this->getApiKey(),
+            'MerchantCode' => $this->getMerchantCode(),
+            'Content-Type' => 'application/json',
+        ]);
 
-        $body = $data;
         $httpResponse = $this->httpClient->request(
             $this->getHttpMethod(),
-            $this->getBaseUrl().ltrim($this->getEndpoint(), '/'),
+            $this->getBaseUrl() . ltrim($this->getEndpoint(), '/'),
             $headers,
-            $body,
+            json_encode($data),
         );
 
         return $this->createResponse($httpResponse->getBody()->getContents(), $httpResponse->getHeaders());
     }
 
+    public function getEmail()
+    {
+        return $this->getParameter('email');
+    }
+
+    public function setEmail($value)
+    {
+        return $this->setParameter('email', $value);
+    }
+
+    public function getCustomerId()
+    {
+        return $this->getParameter('customerId');
+    }
+
+    public function setCustomerId($value)
+    {
+        return $this->setParameter('customerId', $this->prefix($value));
+    }
+
+    public function setTransactionId($value)
+    {
+        return $this->setParameter('transactionId', $this->prefix($value));
+    }
+
     protected function createResponse($data, $headers = [])
     {
         return $this->response = new Response($this, $data, $headers);
+    }
+
+    protected function prefix($value)
+    {
+        if ($this->getTestMode() && !is_null($this->getTransactionPrefix())) {
+            return $this->getTransactionPrefix() . $value;
+        }
+
+        return $value;
     }
 }
