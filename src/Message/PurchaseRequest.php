@@ -2,6 +2,8 @@
 
 namespace Ampeco\OmnipayMobilExpress\Message;
 
+use Ampeco\OmnipayMobilExpress\Gateway;
+
 class PurchaseRequest extends AbstractRequest
 {
     public function getEndpoint()
@@ -9,11 +11,24 @@ class PurchaseRequest extends AbstractRequest
         return 'ProcessPayment';
     }
 
+    public function getProcessType()
+    {
+        return $this->getParameter('processType') ?? Gateway::PROCESS_TYPE_SALES;
+    }
+
+    public function setProcessType($value)
+    {
+        if (in_array($value = strtolower($value), Gateway::processTypes())) {
+            return $this->setParameter('processType', $value);
+        }
+
+        return $this;
+    }
+
     public function getData()
     {
         $this->validate('transactionId', 'amount', 'currency', 'token', 'email', 'customerId', 'posId');
 
-        // TODO: Where should we put the description (bank statement?)
         return [
             "orderId" => $this->getTransactionId(),
             "totalAmount" => $this->getAmount(),
@@ -25,7 +40,7 @@ class PurchaseRequest extends AbstractRequest
             "paymentInstrument"=> "StoredCard",
             "paymentInstrumentInfo" => [
                 "storedCard" => [
-                    "processType" => "sales",
+                    "processType" => $this->getProcessType(),
                     "cardToken" => $this->getToken(),
                     "use3DSecure" => false,
                     "posAccount" => [
