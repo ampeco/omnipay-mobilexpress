@@ -29,8 +29,11 @@ class CreateCardRequest extends AbstractRequest
             ],
             "accountInstrumentInfo" => [
                 "card" => [
-                    "processType" => Gateway::PROCESS_TYPE_SALES,
+                    "processType" => Gateway::PROCESS_TYPE_PREAUTH,
                     // "threeDSecureMode" => "Mandatory",
+                    "posConfiguration" => [
+                        "defaultPOS" => $this->getPosId(),
+                    ]
                 ]
             ],
             "returnUrl" => $this->getReturnUrl(),
