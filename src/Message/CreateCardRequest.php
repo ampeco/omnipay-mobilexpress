@@ -2,8 +2,6 @@
 
 namespace Ampeco\OmnipayMobilExpress\Message;
 
-use Ampeco\OmnipayMobilExpress\Gateway;
-
 class CreateCardRequest extends AbstractRequest
 {
     public function getEndpoint()
@@ -18,7 +16,7 @@ class CreateCardRequest extends AbstractRequest
         return [
             "uiDesignInfo" => [
                 "viewType" => "Compact",
-                "designType" => 2, // [0 red, 1 yellow, 2 black] - same design, 4 better design
+                "designType" => "0.1.4",
             ],
             "customerInfo" => [
                 "email" => $this->getEmail(),
@@ -29,10 +27,8 @@ class CreateCardRequest extends AbstractRequest
             ],
             "accountInstrumentInfo" => [
                 "card" => [
-                    "processType" => Gateway::PROCESS_TYPE_PREAUTH,
-                    // "threeDSecureMode" => "Mandatory",
                     "posConfiguration" => [
-                        "defaultPOS" => $this->getPosId(),
+                        "defaultPOS" => 0,
                     ]
                 ]
             ],
