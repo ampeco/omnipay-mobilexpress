@@ -16,7 +16,7 @@ class CreateCardRequest extends AbstractRequest
         return [
             "uiDesignInfo" => [
                 "viewType" => "Compact",
-                "designType" => "0.1.4",
+                "designType" => 0,
             ],
             "customerInfo" => [
                 "email" => $this->getEmail(),
