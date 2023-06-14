@@ -10,7 +10,7 @@ class Card
     public string $lastFour;
     public ?string $month;
     public ?string $year;
-    public ?bool $isExpired;
+    public bool $isExpired;
 
     public function __construct(array $data)
     {
@@ -19,7 +19,7 @@ class Card
         $this->number = $data['maskedCardNumber'];
         $this->month = $data['lastMonth'] ?? null;
         $this->year = $data['lastYear'] ?? null;
-        $this->isExpired = $data['isExpired'] ?? null;
+        $this->isExpired = $data['isExpired'] ?? false;
 
         $this->lastFour = substr($this->number, -4);
     }
