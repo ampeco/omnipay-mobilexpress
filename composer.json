@@ -1,5 +1,6 @@
 {
     "name": "ampeco/omnipay-mobilexpress",
+    "version": "0.3.1",
     "description": "Omnipay plugin for https://developer.mobilexpress.com.tr/docs/introduction",
     "type": "library",
     "license": "MIT",
