@@ -8,8 +8,11 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
     use CommonParameters;
 
-    const ENDPOINT_PRODUCTION = 'https://api.lidio.com/';
-    const ENDPOINT_TESTING = 'https://test.lidio.com/api/';
+    // const ENDPOINT_PRODUCTION = 'https://api.lidio.com/';
+    // const ENDPOINT_TESTING = 'https://test.lidio.com/api/';
+
+    const ENDPOINT_PRODUCTION = 'https://api.mobilexpress.com.tr/';
+    const ENDPOINT_TESTING = 'https://testapi.mobilexpress.com.tr/';
 
     abstract public function getEndpoint();
 
