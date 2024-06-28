@@ -3,6 +3,7 @@
 namespace Ampeco\OmnipayMobilExpress\Message;
 
 use Ampeco\OmnipayMobilExpress\CommonParameters;
+use Omnipay\Common\Http\Exception\NetworkException;
 
 abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
 {
@@ -44,14 +45,19 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
             'Content-Type' => 'application/json',
         ]);
 
-        $httpResponse = $this->httpClient->request(
-            $this->getHttpMethod(),
-            $this->getBaseUrl() . ltrim($this->getEndpoint(), '/'),
-            $headers,
-            json_encode($data),
-        );
+        try {
+            $httpResponse = $this->httpClient->request(
+                $this->getHttpMethod(),
+                $this->getBaseUrl() . ltrim($this->getEndpoint(), '/'),
+                $headers,
+                json_encode($data),
+            );
+            $data = $httpResponse->getBody()->getContents();
+        } catch (NetworkException $e) {
+            $data = '';
+        }
 
-        return $this->createResponse($httpResponse->getBody()->getContents(), $httpResponse->getHeaders());
+        return $this->createResponse($data, $httpResponse->getHeaders());
     }
 
     public function getEmail()
