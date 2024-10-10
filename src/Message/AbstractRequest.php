@@ -53,11 +53,13 @@ abstract class AbstractRequest extends \Omnipay\Common\Message\AbstractRequest
                 json_encode($data),
             );
             $responseData = $httpResponse->getBody()->getContents();
+            $headers = $httpResponse->getHeaders();
         } catch (NetworkException $e) {
             $responseData = '';
+            $headers = [];
         }
 
-        return $this->createResponse($responseData, $httpResponse->getHeaders());
+        return $this->createResponse($responseData, $headers);
     }
 
     public function getEmail()
