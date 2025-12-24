@@ -44,4 +44,14 @@ trait CommonParameters
     {
         return $this->setParameter('TransactionPrefix', $value);
     }
+
+    public function getDesignType()
+    {
+        return $this->getParameter('designType');
+    }
+
+    public function setDesignType($value)
+    {
+        return $this->setParameter('designType', $value);
+    }
 }
